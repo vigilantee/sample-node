@@ -41,7 +41,8 @@ const checkAvailability = async (room_id, from, till) => {
 
 app.post('/bookRooms', async (req, res) => {
     const { from, till, room_id, user_id } = req.body;
-    if (!checkAvailability(room_id, from, till)) {
+    const available = await checkAvailability(room_id, from, till);
+    if (!available) {
         return res.status(409).send(({ "message": `Room ${room_id} is not available on selected dates`, "success": false, error: true }));
     }
     const q2 = `insert into bookings(room_id, user_id, booking_from, booking_till) values(${room_id}, ${user_id}, "${from}", "${till}" );`;
